@@ -86,11 +86,12 @@
   /* Chip multi-select */
   .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 13px; color: var(--muted); transition: all 0.18s; user-select: none; background: var(--card); font-family: 'Cairo', sans-serif; direction: ltr; }
-
+  .chip * { pointer-events: none; }
   .chip.selected { background: var(--sg-green-light); border-color: var(--sg-green); color: var(--sg-green); font-weight: 600; }
   .chip-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
-  .dealer-chip { flex: 1; min-width: 100px; justify-content: center; padding: 10px 8px; flex-direction: column; gap: 3px; text-align: center; border-radius: 10px; direction: ltr; }
+  .dealer-chip { flex: 1; min-width: 80px; justify-content: center; padding: 10px 8px; flex-direction: column; gap: 3px; text-align: center; border-radius: 10px; direction: ltr; cursor: pointer; }
+  .dealer-chip * { pointer-events: none; }
   .dealer-chip .dealer-code { font-size: 15px; font-weight: 700; }
   .dealer-chip .dealer-desc { font-size: 10px; opacity: 0.7; }
 
@@ -825,7 +826,7 @@ function submitForm() {
   const formData = collectFormData();
   formData.ref = refNum;
 
-  fetch('https://hook.eu1.make.com/hf4od4qdsbb1qbg7ln4khvmoiq15ks46', {
+  fetch('https://script.google.com/macros/s/AKfycbxCbZNtRgYHRTXs_7tdFSWMlcHHLoRDWCnxis0a12oaRqfX2TclPdOwyjk9JdYHWePUYQ/exec', {
     method: 'POST',
     mode: 'no-cors',
     headers: {'Content-Type': 'application/json'},
@@ -857,4 +858,12 @@ function resetForm() {
   document.getElementById('new-cust-check').className = 'check-box';
   document.getElementById('new-cust-check').innerHTML = '';
   document.getElementById('overdue-amount-field').style.display = 'none';
-  document.querySelectorAll('#overdue-group .chip').forEach(c => c.class
+  document.querySelectorAll('#overdue-group .chip').forEach(c => c.classList.remove('selected'));
+  isNewCustomer = false; urgency = ''; selectedDealer = '';
+  ['low','med','high'].forEach(l => document.getElementById('urg-'+l).className = 'urg-card');
+  document.querySelectorAll('.eng-only').forEach(w => w.classList.remove('has-error'));
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
