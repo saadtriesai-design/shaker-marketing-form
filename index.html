@@ -826,11 +826,12 @@ function submitForm() {
   const formData = collectFormData();
   formData.ref = refNum;
 
-  fetch('https://script.google.com/macros/s/AKfycbxIdlGvQt7GiYRZdT2rFMAtknJ_5mYPpO5FcuM7tZExYqbBouHVS9SSJHK4DFwAcIFbEw/exec', {
+  const fd = new FormData();
+  Object.keys(formData).forEach(k => fd.append(k, formData[k]));
+  fetch('https://script.google.com/macros/s/AKfycbx9F8_7Fs2Xwi1OXoiCRY0W3xkLv4Ur9lXs-UBmQT4ooOOo60pNz-jUSSvGbS166VK_/exec', {
     method: 'POST',
     mode: 'no-cors',
-    headers: {'Content-Type': 'text/plain'},
-    body: JSON.stringify(formData)
+    body: fd
   }).catch(err => console.log('Submission error:', err));
   document.getElementById('success-title').textContent = t.successTitle;
   document.getElementById('success-msg').textContent = t.successMsg;
