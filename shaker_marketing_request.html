@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Shaker Group — Marketing Support Request</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600&family=Tajawal:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sg-green: #2D7A3A;
+    --sg-green-dark: #235e2c;
+    --sg-green-light: #E8F5EA;
+    --sg-amber: #BA7517;
+    --sg-red: #A32D2D;
+    --sg-border: rgba(45,122,58,0.2);
+    --sg-radius: 12px;
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --input-bg: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); font-family: 'Cairo', sans-serif; color: var(--text); min-height: 100vh; }
+  body { padding: 0 0 2rem; }
+
+  .header {
+    background: var(--sg-green);
+    padding: 1rem 1.25rem;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(45,122,58,0.25);
+  }
+  .header-inner { max-width: 680px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+  .header-logo { display: flex; align-items: center; gap: 10px; }
+  .logo-svg { width: 38px; height: 38px; flex-shrink: 0; }
+  .header-text .title { color: white; font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .header-text .sub { color: rgba(255,255,255,0.75); font-size: 12px; }
+  .lang-toggle { display: flex; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 3px; gap: 3px; flex-shrink: 0; }
+  .lang-btn { padding: 5px 14px; border-radius: 16px; border: none; cursor: pointer; font-size: 12px; font-weight: 600; background: transparent; color: white; transition: all 0.2s; font-family: 'Cairo', sans-serif; }
+  .lang-btn.active { background: white; color: var(--sg-green); }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 1.25rem 1rem; }
+
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--sg-radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: 11px; font-weight: 600; color: var(--sg-green);
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 1rem; padding-bottom: 8px;
+    border-bottom: 2px solid var(--sg-green-light);
+  }
+
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+  label.field-label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 5px; }
+  .required-star { color: #E24B4A; }
+
+  input[type=text], input[type=number], select, textarea {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px; font-size: 14px;
+    font-family: 'Cairo', sans-serif;
+    color: var(--text); background: var(--input-bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--sg-green);
+    box-shadow: 0 0 0 3px rgba(45,122,58,0.1);
+  }
+  input:disabled { opacity: 0.5; background: #f9fafb; cursor: not-allowed; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  .rtl select { background-position: left 12px center; padding-right: 12px; padding-left: 32px; }
+  textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width: 480px) { .row2 { grid-template-columns: 1fr; gap: 0; } .row2 .field { margin-bottom: 1rem; } }
+
+  /* Chip multi-select */
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 13px; color: var(--muted); transition: all 0.18s; user-select: none; background: var(--card); font-family: 'Cairo', sans-serif; direction: ltr; }
+
+  .chip.selected { background: var(--sg-green-light); border-color: var(--sg-green); color: var(--sg-green); font-weight: 600; }
+  .chip-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+  .dealer-chip { flex: 1; min-width: 100px; justify-content: center; padding: 10px 8px; flex-direction: column; gap: 3px; text-align: center; border-radius: 10px; direction: ltr; }
+  .dealer-chip .dealer-code { font-size: 15px; font-weight: 700; }
+  .dealer-chip .dealer-desc { font-size: 10px; opacity: 0.7; }
+
+  /* New customer badge */
+  .new-customer-badge {
+    display: none; align-items: center; gap: 6px;
+    background: #FEF3C7; color: #92400E;
+    font-size: 12px; padding: 5px 12px;
+    border-radius: 8px; margin-top: 6px;
+    border: 1px solid #FDE68A;
+  }
+
+  /* Checkbox toggle row */
+  .check-row { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px 0; }
+  .check-box {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--border); flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all 0.2s; background: white;
+  }
+  .check-box.checked { border-color: var(--sg-green); background: var(--sg-green-light); }
+  .check-label { font-size: 13px; color: var(--text); }
+
+  /* Overdue toggle */
+  .overdue-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px; border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; transition: border-color 0.2s;
+  }
+  .overdue-row:hover { border-color: var(--sg-green); }
+  .toggle-track {
+    width: 42px; height: 22px; border-radius: 11px;
+    background: #d1d5db; position: relative;
+    transition: background 0.25s; flex-shrink: 0;
+  }
+  .toggle-track.on { background: #E24B4A; }
+  .toggle-thumb {
+    width: 18px; height: 18px; background: white; border-radius: 50%;
+    position: absolute; top: 2px; left: 2px;
+    transition: left 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-track.on .toggle-thumb { left: 22px; }
+  .overdue-label { font-size: 14px; color: var(--text); }
+
+  /* Urgency cards */
+  .urgency-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .urg-card { padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--card); direction: ltr; }
+  .urg-card .urg-dot { width: 12px; height: 12px; border-radius: 50%; margin: 0 auto 6px; }
+  .urg-card .urg-text { font-size: 13px; font-weight: 600; }
+  .urg-card.sel-low { background: #EAF3DE; border-color: #3B6D11; }
+  .urg-card.sel-med { background: #FAEEDA; border-color: #854F0B; }
+  .urg-card.sel-high { background: #FCEBEB; border-color: #A32D2D; }
+
+  /* Photo upload */
+  .photo-drop {
+    border: 2px dashed var(--sg-border); border-radius: 10px;
+    padding: 1.5rem; text-align: center; cursor: pointer;
+    transition: all 0.2s; background: #fafffe;
+  }
+  .photo-drop:hover { border-color: var(--sg-green); background: var(--sg-green-light); }
+  .photo-drop .icon { font-size: 28px; margin-bottom: 6px; }
+  .photo-drop p { font-size: 13px; color: var(--muted); }
+  .photo-drop strong { color: var(--sg-green); }
+  .photo-preview { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .photo-thumb { width: 68px; height: 68px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); }
+
+  /* Submit button */
+  .submit-btn {
+    width: 100%; padding: 15px;
+    background: var(--sg-green); color: white;
+    border: none; border-radius: var(--sg-radius);
+    font-size: 16px; font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    margin-top: 0.5rem; letter-spacing: 0.3px;
+  }
+  .submit-btn:hover { background: var(--sg-green-dark); }
+  .submit-btn:active { transform: scale(0.99); }
+
+  /* Success screen */
+  .success-screen {
+    display: none; text-align: center;
+    padding: 3rem 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--sg-radius);
+  }
+  .success-icon {
+    width: 68px; height: 68px; background: var(--sg-green-light);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 1.25rem;
+  }
+  .success-icon svg { width: 32px; height: 32px; stroke: var(--sg-green); }
+  .success-title { font-size: 20px; font-weight: 700; color: var(--sg-green); margin-bottom: 8px; }
+  .success-msg { font-size: 14px; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+  .success-ref { font-size: 12px; color: var(--muted); margin-bottom: 1.5rem; }
+  .success-ref span { font-weight: 700; color: var(--sg-green); }
+
+  /* English-only field indicator */
+  .eng-only { position: relative; }
+  .eng-only::after { content: 'EN'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 700; color: var(--sg-green); background: var(--sg-green-light); padding: 2px 6px; border-radius: 4px; pointer-events: none; }
+  .eng-only.has-error input { border-color: #E24B4A; }
+  .eng-error { font-size: 12px; color: #E24B4A; margin-top: 4px; display: none; }
+  .eng-only.has-error .eng-error { display: block; }
+  .rtl { direction: rtl; font-family: 'Tajawal', sans-serif !important; }
+  .rtl input, .rtl select, .rtl textarea { font-family: 'Tajawal', sans-serif !important; }
+  .rtl .section-title { letter-spacing: 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,3 37,33 3,33" fill="none" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+        <polygon points="20,11 30,28 10,28" fill="rgba(255,255,255,0.2)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+      <div class="header-text">
+        <div class="title" id="h-title">Marketing Support Request</div>
+        <div class="sub" id="h-sub">Shaker Group — HVAC Division</div>
+      </div>
+    </div>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ar')">عر</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div id="form-body">
+
+    <!-- SECTION 1: Customer Info -->
+    <div class="section">
+      <div class="section-title" id="s1-title">Customer Information</div>
+
+      <div class="field">
+        <label class="field-label" id="l-sapname">Customer Name (as per SAP) <span class="required-star">*</span></label>
+        <div class="eng-only" id="eo-sapname">
+          <input type="text" id="sap-name" placeholder="Enter SAP customer name" oninput="enforceEnglish(this,'eo-sapname')">
+          <div class="eng-error" id="l-sapname">Please write in English / الرجاء الكتابة بالإنجليزية</div>
+        </div>
+        <div class="new-customer-badge" id="new-customer-badge">
+          <span>⚠</span> <span id="badge-text">New Customer — Not in SAP</span>
+        </div>
+      </div>
+
+      <div class="field" id="sap-number-field">
+        <label class="field-label" id="l-sapnumber">Customer Number (as per SAP)</label>
+        <div class="eng-only" id="eo-sapnumber">
+          <input type="text" id="sap-number" placeholder="e.g. 1000123" oninput="enforceEnglish(this,'eo-sapnumber')">
+          <div class="eng-error">Please write in English / الرجاء الكتابة بالإنجليزية</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="check-row" onclick="toggleNewCustomer()">
+          <div class="check-box" id="new-cust-check"></div>
+          <span class="check-label" id="l-newcust">Customer not in SAP (New Customer)</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="l-dealer">Dealer Type <span class="required-star">*</span></label>
+        <div class="chip-group" id="dealer-group">
+          <div class="chip dealer-chip" onclick="selectDealer(this,'IR')">
+            <span class="chip-dot"></span>
+            <span class="dealer-code chip-en">IR</span>
+            <span class="dealer-code chip-ar" style="display:none">IR</span>
+            <span class="dealer-desc chip-en">Indoor Retailer</span>
+            <span class="dealer-desc chip-ar" style="display:none">متجر داخلي</span>
+          </div>
+          <div class="chip dealer-chip" onclick="selectDealer(this,'OR')">
+            <span class="chip-dot"></span>
+            <span class="dealer-code chip-en">OR</span>
+            <span class="dealer-code chip-ar" style="display:none">OR</span>
+            <span class="dealer-desc chip-en">Outdoor Retailer</span>
+            <span class="dealer-desc chip-ar" style="display:none">متجر خارجي</span>
+          </div>
+          <div class="chip dealer-chip" onclick="selectDealer(this,'ACS')">
+            <span class="chip-dot"></span>
+            <span class="dealer-code chip-en">ACS</span>
+            <span class="dealer-code chip-ar" style="display:none">ACS</span>
+            <span class="dealer-desc chip-en">AC Specialist</span>
+            <span class="dealer-desc chip-ar" style="display:none">متخصص تكييف</span>
+          </div>
+          <div class="chip dealer-chip" onclick="selectDealer(this,'SUB')">
+            <span class="chip-dot"></span>
+            <span class="dealer-code">Sub-dealer</span>
+            <span class="dealer-desc">Sub-dealer</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="field-label" id="l-region">Region <span class="required-star">*</span></label>
+          <select id="region">
+            <option value="" id="opt-region">Select region</option>
+            <option value="Western">Western — الغربية</option>
+            <option value="Eastern">Eastern — الشرقية</option>
+            <option value="Central">Central — الوسطى</option>
+            <option value="South">South — الجنوب</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" id="l-city">City <span class="required-star">*</span></label>
+          <div class="eng-only" id="eo-city">
+            <input type="text" id="city" placeholder="e.g. Riyadh" oninput="enforceEnglish(this,'eo-city')">
+            <div class="eng-error">Please write in English / الرجاء الكتابة بالإنجليزية</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="l-store">Store Name <span class="required-star">*</span></label>
+        <div class="eng-only" id="eo-store">
+          <input type="text" id="store" placeholder="Enter store / dealer name" oninput="enforceEnglish(this,'eo-store')">
+          <div class="eng-error">Please write in English / الرجاء الكتابة بالإنجليزية</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="l-location">Store Location / Address</label>
+        <div class="eng-only" id="eo-location">
+          <input type="text" id="location" placeholder="Street, area, or Google Maps link" oninput="enforceEnglish(this,'eo-location')">
+          <div class="eng-error">Please write in English / الرجاء الكتابة بالإنجليزية</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="l-branchtype">Branch Type <span class="required-star">*</span></label>
+        <div class="chip-group" id="branch-group">
+          <label class="chip" style="flex:1;justify-content:center;border-radius:10px;padding:10px 8px;direction:ltr" onclick="selectBranch(this,'new')">
+            <span class="chip-dot"></span>
+            <span class="chip-en">New Opening</span><span class="chip-ar" style="display:none">افتتاح جديد</span>
+          </label>
+          <label class="chip" style="flex:1;justify-content:center;border-radius:10px;padding:10px 8px;direction:ltr" onclick="selectBranch(this,'existing')">
+            <span class="chip-dot"></span>
+            <span class="chip-en">Existing</span><span class="chip-ar" style="display:none">قائم</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field" id="opening-date-field" style="display:none">
+        <label class="field-label" id="l-opendate">Showroom Opening Date</label>
+        <input type="date" id="opening-date">
+      </div>
+    </div>
+
+    <!-- SECTION 2: Sales & Finance -->
+    <div class="section">
+      <div class="section-title" id="s2-title">Sales & Financial Data</div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="field-label" id="l-sales25">2025 Actual Sales (SAR)</label>
+          <input type="number" id="sales25" placeholder="0" min="0">
+        </div>
+        <div class="field">
+          <label class="field-label" id="l-contract25">2025 Contract Value (SAR)</label>
+          <input type="number" id="contract25" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="field-label" id="l-sales26">2026 Actual Sales (SAR)</label>
+          <input type="number" id="sales26" placeholder="0" min="0">
+        </div>
+        <div class="field">
+          <label class="field-label" id="l-contract26">2026 Contract Value (SAR)</label>
+          <input type="number" id="contract26" placeholder="0" min="0">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="l-overdue">Customer Payment Profile <span class="required-star">*</span></label>
+        <div style="display:flex;flex-direction:column;gap:8px" id="overdue-group">
+          <label class="chip" style="border-radius:10px;padding:10px 14px;direction:ltr;width:100%" onclick="selectOverdue(this,'on-time')">
+            <span class="chip-dot" style="background:#639922;flex-shrink:0"></span>
+            <span class="chip-en">Customer pays on time</span><span class="chip-ar" style="display:none">العميل يدفع في الوقت المحدد</span>
+          </label>
+          <label class="chip" style="border-radius:10px;padding:10px 14px;direction:ltr;width:100%" onclick="selectOverdue(this,'chasing')">
+            <span class="chip-dot" style="background:#BA7517;flex-shrink:0"></span>
+            <span class="chip-en">Needs chasing for overdue, but pays</span><span class="chip-ar" style="display:none">يحتاج متابعة للمديونية لكنه يدفع</span>
+          </label>
+          <label class="chip" style="border-radius:10px;padding:10px 14px;direction:ltr;width:100%" onclick="selectOverdue(this,'issues')">
+            <span class="chip-dot" style="background:#E24B4A;flex-shrink:0"></span>
+            <span class="chip-en">Customer has huge overdue and issues in payment</span><span class="chip-ar" style="display:none">العميل لديه مديونية كبيرة ومشاكل في الدفع</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field" id="overdue-amount-field" style="display:none">
+        <label class="field-label" id="l-overdue-amt">Overdue Amount (SAR)</label>
+        <input type="number" id="overdue-amount" placeholder="Enter overdue amount" min="0">
+      </div>
+    </div>
+
+    <!-- SECTION 3: Marketing Support -->
+    <div class="section">
+      <div class="section-title" id="s3-title">Marketing Support Needed</div>
+
+      <div class="field">
+        <label class="field-label" id="l-support">Type of Support <span class="required-star">*</span></label>
+        <div class="chip-group" id="support-group">
+          <label class="chip" onclick="toggleChip(this, 'support-group')">
+            <span class="chip-dot"></span>Logo
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'support-group')">
+            <span class="chip-dot"></span>Stand
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'support-group')">
+            <span class="chip-dot"></span>In-Store Sticker
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'support-group')">
+            <span class="chip-dot"></span>Online Banner
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'support-group')">
+            <span class="chip-dot"></span>Digital Marketing
+          </label>
+        </div>
+      </div>
+
+      <!-- Stand type — shown only when Stand is selected -->
+      <div class="field" id="stand-type-field" style="display:none">
+        <label class="field-label" id="l-stand">Type of Stand <span class="required-star">*</span></label>
+        <div class="chip-group" id="stand-group">
+          <label class="chip" onclick="toggleChip(this, 'stand-group')">
+            <span class="chip-dot"></span>CAC + RAC
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'stand-group')">
+            <span class="chip-dot"></span>RAC Only
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'stand-group')">
+            <span class="chip-dot"></span>CAC Only
+          </label>
+        </div>
+      </div>
+
+      <!-- Banner type — shown only when In-Store Sticker is selected -->
+      <div class="field" id="banner-type-field" style="display:none">
+        <label class="field-label" id="l-banner">Banner Type <span class="required-star">*</span></label>
+        <div class="chip-group" id="banner-group">
+          <label class="chip" onclick="toggleChip(this, 'banner-group')">
+            <span class="chip-dot"></span>CAC Banner
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'banner-group')">
+            <span class="chip-dot"></span>CAC + RAC Banner
+          </label>
+          <label class="chip" onclick="toggleChip(this, 'banner-group')">
+            <span class="chip-dot"></span>RAC Banner
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="l-urgency">Urgency Level <span class="required-star">*</span></label>
+        <div class="urgency-grid">
+          <div class="urg-card" id="urg-low" onclick="setUrgency('low')">
+            <div class="urg-dot" style="background:#639922"></div>
+            <div class="urg-text" style="color:#3B6D11">Low</div>
+          </div>
+          <div class="urg-card" id="urg-med" onclick="setUrgency('med')">
+            <div class="urg-dot" style="background:#BA7517"></div>
+            <div class="urg-text" style="color:#854F0B">Medium</div>
+          </div>
+          <div class="urg-card" id="urg-high" onclick="setUrgency('high')">
+            <div class="urg-dot" style="background:#E24B4A"></div>
+            <div class="urg-text" style="color:#A32D2D">High / Urgent</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="l-desc">Request Description</label>
+        <textarea id="description" rows="3" placeholder="Describe what you need in detail..."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Photos -->
+    <div class="section">
+      <div class="section-title" id="s4-title">Photos & Attachments</div>
+      <div class="field">
+        <label class="field-label" id="l-photos">Store / Location Photos <span class="required-star">*</span></label>
+        <div class="photo-drop" onclick="document.getElementById('photo-input').click()">
+          <div class="icon">📷</div>
+          <p id="photo-hint"><strong>Tap to upload photos</strong><br>Store front, current display, signage area</p>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" multiple style="display:none" onchange="previewPhotos(this)">
+        <div class="photo-preview" id="photo-preview"></div>
+        <div id="photo-count" style="font-size:12px;color:var(--muted);margin-top:5px;display:none"></div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Store In-Charge -->
+    <div class="section">
+      <div class="section-title" id="s5-title">Store In-Charge Contact</div>
+      <div class="row2">
+        <div class="field">
+          <label class="field-label" id="l-icname">Full Name <span class="required-star">*</span></label>
+          <div class="eng-only" id="eo-icname">
+            <input type="text" id="ic-name" placeholder="Store manager / in-charge name" oninput="enforceEnglish(this,'eo-icname')">
+            <div class="eng-error">Please write in English / الرجاء الكتابة بالإنجليزية</div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" id="l-icphone">Mobile / WhatsApp <span class="required-star">*</span></label>
+          <input type="text" id="ic-phone" placeholder="+966 5x xxx xxxx">
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: Salesperson -->
+    <div class="section">
+      <div class="section-title" id="s6-title">Salesperson Details</div>
+      <div class="row2">
+        <div class="field">
+          <label class="field-label" id="l-spname">Your Name <span class="required-star">*</span></label>
+          <div class="eng-only" id="eo-spname">
+            <input type="text" id="sp-name" placeholder="Full name" oninput="enforceEnglish(this,'eo-spname')">
+            <div class="eng-error">Please write in English / الرجاء الكتابة بالإنجليزية</div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" id="l-spphone">Phone / WhatsApp</label>
+          <input type="text" id="sp-phone" placeholder="+966 5x xxx xxxx">
+        </div>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitForm()">
+      <span id="submit-text">Submit Request ↑</span>
+    </button>
+
+  </div><!-- end form-body -->
+
+  <!-- SUCCESS SCREEN -->
+  <div class="success-screen" id="success-screen">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <div class="success-title" id="success-title">Request Submitted!</div>
+    <div class="success-msg" id="success-msg">Your marketing request has been sent to the team. You will be notified once it is reviewed and approved.</div>
+    <div class="success-ref" id="success-ref">Reference: <span id="ref-number">—</span></div>
+    <button class="submit-btn" style="max-width:260px;margin:0 auto;display:block" onclick="resetForm()" id="new-req-btn">Submit Another Request</button>
+  </div>
+
+</div><!-- end container -->
+
+<script>
+const T = {
+  en: {
+    hTitle:'Marketing Support Request', hSub:'Shaker Group — HVAC Division',
+    s1:'Customer Information', s2:'Sales & Financial Data', s3:'Marketing Support Needed', s4:'Photos & Attachments', s5:'Store In-Charge Contact', s6:'Salesperson Details',
+    lSapname:'Customer Name (as per SAP)', lSapnumber:'Customer Number (as per SAP)', lNewcust:'Customer not in SAP (New Customer)',
+    lDealer:'Dealer Type', lRegion:'Region', lCity:'City', lStore:'Store Name', lLocation:'Store Location / Address',
+    lSales25:'2025 Actual Sales (SAR)', lContract25:'2025 Contract Value (SAR)',
+    lSales26:'2026 Actual Sales (SAR)', lContract26:'2026 Contract Value (SAR)',
+    lOverdue:'Customer Payment Profile', lOverdueAmt:'Overdue Amount (SAR)',
+    lSupport:'Type of Support', lStand:'Type of Stand', lBanner:'Banner Type',
+    lBranchtype:'Branch Type', lOpendate:'Showroom Opening Date',
+    lUrgency:'Urgency Level', uLow:'Low', uMed:'Medium', uHigh:'High / Urgent',
+    lDesc:'Request Description', descPh:'Describe what you need in detail...',
+    lPhotos:'Store / Location Photos', photoHint:'<strong>Tap to upload photos</strong><br>Store front, current display, signage area',
+    lIcname:'Full Name', lIcphone:'Mobile / WhatsApp',
+    lSpname:'Your Name', lSpphone:'Phone / WhatsApp',
+    submitText:'Submit Request ↑',
+    successTitle:'Request Submitted!',
+    successMsg:'Your marketing request has been sent to the team. You will be notified once it is reviewed and approved.',
+    newReq:'Submit Another Request',
+    badge:'New Customer — Not in SAP', optRegion:'Select region',
+    photoCount:'photos selected',
+    errRequired:'Please fill in all required fields marked with *',
+    errPhoto:'Please upload at least one store photo',
+    dir:'ltr', dealerDescs:['Indoor Retailer','Outdoor Retailer','AC Specialist','Sub-dealer']
+  },
+  ar: {
+    hTitle:'طلب دعم تسويقي', hSub:'مجموعة شاكر — قسم التكييف',
+    s1:'بيانات العميل', s2:'بيانات المبيعات والمالية', s3:'نوع الدعم المطلوب', s4:'الصور والمرفقات', s5:'بيانات مسؤول المتجر', s6:'بيانات مندوب المبيعات',
+    lSapname:'اسم العميل (كما في SAP)', lSapnumber:'رقم العميل (كما في SAP)', lNewcust:'العميل غير موجود في SAP (عميل جديد)',
+    lDealer:'نوع الوكيل', lRegion:'المنطقة', lCity:'المدينة', lStore:'اسم المتجر', lLocation:'عنوان / موقع المتجر',
+    lSales25:'مبيعات 2025 الفعلية (ريال)', lContract25:'قيمة عقد 2025 (ريال)',
+    lSales26:'مبيعات 2026 الفعلية (ريال)', lContract26:'قيمة عقد 2026 (ريال)',
+    lOverdue:'ملف دفع العميل', lOverdueAmt:'مبلغ المديونية (ريال)',
+    lSupport:'نوع الدعم', lStand:'نوع الستاند', lBanner:'نوع البانر',
+    lBranchtype:'نوع الفرع', lOpendate:'تاريخ افتتاح المعرض',
+    lUrgency:'مستوى الأولوية', uLow:'منخفض', uMed:'متوسط', uHigh:'عالي / عاجل',
+    lDesc:'وصف الطلب', descPh:'اشرح ما تحتاجه بالتفصيل...',
+    lPhotos:'صور المتجر / الموقع', photoHint:'<strong>اضغط لرفع الصور</strong><br>واجهة المحل، العرض الحالي، منطقة اللافتة',
+    lIcname:'الاسم الكامل', lIcphone:'جوال / واتساب',
+    lSpname:'اسمك', lSpphone:'هاتف / واتساب',
+    submitText:'إرسال الطلب ↑',
+    successTitle:'تم إرسال الطلب!',
+    successMsg:'تم إرسال طلبك التسويقي للفريق. سيتم إشعارك عند مراجعته والموافقة عليه.',
+    newReq:'إرسال طلب جديد',
+    badge:'عميل جديد — غير موجود في SAP', optRegion:'اختر المنطقة',
+    photoCount:'صور مختارة',
+    errRequired:'يرجى ملء جميع الحقول المطلوبة المميزة بـ *',
+    errPhoto:'يرجى رفع صورة واحدة على الأقل للمتجر',
+    dir:'rtl', dealerDescs:['متجر داخلي','متجر خارجي','متخصص تكييف','وكيل فرعي']
+  }
+};
+
+let lang = 'en';
+let isNewCustomer = false;
+let urgency = '';
+let selectedDealer = '';
+
+function setLang(l) {
+  lang = l;
+  const t = T[l];
+  document.querySelectorAll('.lang-btn').forEach((b,i) => b.classList.toggle('active', (i===0&&l==='en')||(i===1&&l==='ar')));
+  const fb = document.getElementById('form-body');
+  fb.setAttribute('dir', t.dir);
+  fb.className = l==='ar' ? 'rtl' : '';
+  document.getElementById('success-screen').setAttribute('dir', t.dir);
+  document.getElementById('success-screen').className = l==='ar' ? 'success-screen rtl' : 'success-screen';
+
+  document.getElementById('h-title').textContent = t.hTitle;
+  document.getElementById('h-sub').textContent = t.hSub;
+  document.getElementById('s1-title').textContent = t.s1;
+  document.getElementById('s2-title').textContent = t.s2;
+  document.getElementById('s3-title').textContent = t.s3;
+  document.getElementById('s4-title').textContent = t.s4;
+  document.getElementById('s5-title').textContent = t.s5;
+  document.getElementById('s6-title').textContent = t.s6;
+  document.getElementById('l-sapname').innerHTML = t.lSapname + ' <span class="required-star">*</span>';
+  document.getElementById('l-sapnumber').textContent = t.lSapnumber;
+  document.getElementById('l-newcust').textContent = t.lNewcust;
+  document.getElementById('l-dealer').innerHTML = t.lDealer + ' <span class="required-star">*</span>';
+  document.getElementById('l-region').innerHTML = t.lRegion + ' <span class="required-star">*</span>';
+  document.getElementById('l-city').innerHTML = t.lCity + ' <span class="required-star">*</span>';
+  document.getElementById('l-store').innerHTML = t.lStore + ' <span class="required-star">*</span>';
+  document.getElementById('l-location').textContent = t.lLocation;
+  document.getElementById('l-sales25').textContent = t.lSales25;
+  document.getElementById('l-contract25').textContent = t.lContract25;
+  document.getElementById('l-sales26').textContent = t.lSales26;
+  document.getElementById('l-contract26').textContent = t.lContract26;
+  document.getElementById('l-overdue').innerHTML = t.lOverdue + ' <span class="required-star">*</span>';
+  document.getElementById('l-overdue-amt').textContent = t.lOverdueAmt;
+  document.getElementById('l-support').innerHTML = t.lSupport + ' <span class="required-star">*</span>';
+  document.getElementById('l-stand').innerHTML = t.lStand + ' <span class="required-star">*</span>';
+  document.getElementById('l-banner').innerHTML = t.lBanner + ' <span class="required-star">*</span>';
+  document.getElementById('l-branchtype').innerHTML = t.lBranchtype + ' <span class="required-star">*</span>';
+  document.getElementById('l-opendate').textContent = t.lOpendate;
+  document.getElementById('l-urgency').innerHTML = t.lUrgency + ' <span class="required-star">*</span>';
+  document.getElementById('l-desc').textContent = t.lDesc;
+  document.getElementById('description').placeholder = t.descPh;
+  document.getElementById('l-photos').innerHTML = t.lPhotos + ' <span class="required-star">*</span>';
+  document.getElementById('photo-hint').innerHTML = t.photoHint;
+  document.getElementById('l-icname').innerHTML = t.lIcname + ' <span class="required-star">*</span>';
+  document.getElementById('l-icphone').innerHTML = t.lIcphone + ' <span class="required-star">*</span>';
+  document.getElementById('l-spname').innerHTML = t.lSpname + ' <span class="required-star">*</span>';
+  document.getElementById('l-spphone').textContent = t.lSpphone;
+  document.getElementById('submit-text').textContent = t.submitText;
+  document.getElementById('badge-text').textContent = t.badge;
+  document.getElementById('opt-region').textContent = t.optRegion;
+  document.getElementById('new-req-btn').textContent = t.newReq;
+
+  // update dealer chip descriptions
+  const dealerChips = document.querySelectorAll('#dealer-group .chip');
+  dealerChips.forEach((chip, i) => {
+    const descs = chip.querySelectorAll('.dealer-desc');
+    descs.forEach(d => d.textContent = t.dealerDescs[i]);
+  });
+
+  document.querySelectorAll('.chip-en').forEach(el => el.style.display = l==='ar'?'none':'');
+  document.querySelectorAll('.chip-ar').forEach(el => el.style.display = l==='ar'?'':'none');
+}
+
+function enforceEnglish(input, wrapperId) {
+  const arabic = /[\u0600-\u06FF]/;
+  const wrapper = document.getElementById(wrapperId);
+  if(arabic.test(input.value)) {
+    input.value = input.value.replace(/[\u0600-\u06FF]/g, '');
+    wrapper.classList.add('has-error');
+    setTimeout(() => wrapper.classList.remove('has-error'), 2000);
+  }
+}
+
+function toggleNewCustomer() {
+  isNewCustomer = !isNewCustomer;
+  const box = document.getElementById('new-cust-check');
+  box.classList.toggle('checked', isNewCustomer);
+  box.innerHTML = isNewCustomer ? '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="#2D7A3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+  const sapInput = document.getElementById('sap-name');
+  const sapNum = document.getElementById('sap-number');
+  sapInput.disabled = isNewCustomer;
+  sapNum.disabled = isNewCustomer;
+  document.getElementById('new-customer-badge').style.display = isNewCustomer ? 'flex' : 'none';
+}
+
+function selectOverdue(el, type) {
+  document.querySelectorAll('#overdue-group .chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const showAmount = (type === 'chasing' || type === 'issues');
+  document.getElementById('overdue-amount-field').style.display = showAmount ? '' : 'none';
+}
+
+function selectDealer(el, code) {
+  document.querySelectorAll('#dealer-group .chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedDealer = code;
+}
+
+function toggleChip(el, groupId) {
+  el.classList.toggle('selected');
+  if(groupId === 'support-group') {
+    const selected = [...document.querySelectorAll('#support-group .chip.selected')];
+    const hasStand = selected.some(c => c.textContent.includes('Stand') || c.textContent.includes('ستاند'));
+    const hasBanner = selected.some(c => c.textContent.includes('In-Store Sticker') || c.textContent.includes('ستيكر'));
+    document.getElementById('stand-type-field').style.display = hasStand ? '' : 'none';
+    document.getElementById('banner-type-field').style.display = hasBanner ? '' : 'none';
+  }
+}
+
+function selectBranch(el, type) {
+  document.querySelectorAll('#branch-group .chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('opening-date-field').style.display = type === 'new' ? '' : 'none';
+}
+
+function setUrgency(level) {
+  urgency = level;
+  ['low','med','high'].forEach(l => {
+    const el = document.getElementById('urg-'+l);
+    el.className = 'urg-card';
+    if(l===level) el.classList.add('sel-'+l);
+  });
+}
+
+function previewPhotos(input) {
+  const preview = document.getElementById('photo-preview');
+  const countEl = document.getElementById('photo-count');
+  preview.innerHTML = '';
+  const files = [...input.files];
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.className = 'photo-thumb';
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+  if(files.length > 0) {
+    countEl.style.display = '';
+    countEl.textContent = files.length + ' ' + T[lang].photoCount;
+  } else {
+    countEl.style.display = 'none';
+  }
+}
+
+function collectFormData() {
+  const getChips = (groupId) => [...document.querySelectorAll('#'+groupId+' .chip.selected')]
+    .map(c => (c.querySelector('.chip-en') || c).textContent.trim()).join(', ');
+  const getOverdue = () => {
+    const sel = document.querySelector('#overdue-group .chip.selected');
+    if(!sel) return '';
+    if(sel.textContent.includes('on time') || sel.textContent.includes('محدد')) return 'Pays on time';
+    if(sel.textContent.includes('chasing') || sel.textContent.includes('متابعة')) return 'Needs chasing but pays';
+    return 'Huge overdue & payment issues';
+  };
+  const getBranch = () => {
+    const sel = document.querySelector('#branch-group .chip.selected');
+    if(!sel) return '';
+    return sel.textContent.includes('New') || sel.textContent.includes('افتتاح') ? 'New Opening' : 'Existing';
+  };
+  const getRegion = () => {
+    const v = document.getElementById('region').value;
+    const map = {'Western':'Western','Eastern':'Eastern','Central':'Central','South':'South'};
+    return map[v] || v;
+  };
+  return {
+    ref: document.getElementById('ref-number').textContent,
+    customerName: document.getElementById('sap-name').value,
+    customerNumber: document.getElementById('sap-number').value,
+    isNewCustomer: isNewCustomer ? 'Yes' : 'No',
+    dealerType: selectedDealer,
+    region: getRegion(),
+    city: document.getElementById('city').value,
+    storeName: document.getElementById('store').value,
+    storeLocation: document.getElementById('location').value,
+    branchType: getBranch(),
+    showroomOpeningDate: document.getElementById('opening-date').value,
+    sales2025: document.getElementById('sales25').value,
+    contract2025: document.getElementById('contract25').value,
+    sales2026: document.getElementById('sales26').value,
+    contract2026: document.getElementById('contract26').value,
+    paymentProfile: getOverdue(),
+    overdueAmount: document.getElementById('overdue-amount').value,
+    supportType: getChips('support-group'),
+    standType: getChips('stand-group'),
+    bannerType: getChips('banner-group'),
+    urgencyLevel: urgency === 'low' ? 'Low' : urgency === 'med' ? 'Medium' : urgency === 'high' ? 'High/Urgent' : '',
+    description: document.getElementById('description').value,
+    storeInChargeName: document.getElementById('ic-name').value,
+    storeInChargePhone: document.getElementById('ic-phone').value,
+    salespersonName: document.getElementById('sp-name').value,
+    salespersonPhone: document.getElementById('sp-phone').value,
+  };
+}
+
+function generateRef() {
+  return 'SHK-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*9000)+1000);
+}
+
+function submitForm() {
+  const t = T[lang];
+  const spName = document.getElementById('sp-name').value.trim();
+  const store = document.getElementById('store').value.trim();
+  const region = document.getElementById('region').value;
+  const city = document.getElementById('city').value.trim();
+  const photos = document.getElementById('photo-input').files;
+
+  if(!spName || !store || !region || !city) {
+    alert(t.errRequired); return;
+  }
+  if(photos.length === 0) {
+    alert(t.errPhoto); return;
+  }
+
+  const refNum = generateRef();
+  document.getElementById('ref-number').textContent = refNum;
+  document.getElementById('success-title').textContent = t.successTitle;
+  document.getElementById('success-msg').textContent = t.successMsg;
+  document.getElementById('new-req-btn').textContent = t.newReq;
+  document.getElementById('success-screen').setAttribute('dir', T[lang].dir);
+
+  document.getElementById('form-body').style.display = 'none';
+  document.getElementById('success-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function resetForm() {
+  document.getElementById('form-body').style.display = '';
+  document.getElementById('success-screen').style.display = 'none';
+  document.querySelectorAll('input[type=text], input[type=number], textarea').forEach(el => { el.value = ''; el.disabled = false; });
+  document.getElementById('region').value = '';
+  document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
+  document.getElementById('stand-type-field').style.display = 'none';
+  document.getElementById('banner-type-field').style.display = 'none';
+  document.getElementById('opening-date-field').style.display = 'none';
+  document.getElementById('photo-preview').innerHTML = '';
+  document.getElementById('photo-count').style.display = 'none';
+  document.getElementById('photo-input').value = '';
+  document.getElementById('new-customer-badge').style.display = 'none';
+  document.getElementById('new-cust-check').className = 'check-box';
+  document.getElementById('new-cust-check').innerHTML = '';
+  document.getElementById('overdue-amount-field').style.display = 'none';
+  document.querySelectorAll('#overdue-group .chip').forEach(c => c.classList.remove('selected'));
+  isNewCustomer = false; urgency = ''; selectedDealer = '';
+  ['low','med','high'].forEach(l => document.getElementById('urg-'+l).className = 'urg-card');
+  document.querySelectorAll('.eng-only').forEach(w => w.classList.remove('has-error'));
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
