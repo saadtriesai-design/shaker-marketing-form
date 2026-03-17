@@ -826,10 +826,10 @@ function submitForm() {
   const formData = collectFormData();
   formData.ref = refNum;
 
-  fetch('https://script.google.com/macros/s/AKfycbzML67sLLKQwjyHDUlOPshmgNdq5kZEcIZJc3-vSBy2mtj4x-NmXiJ1jG5rqAwYI_9fzA/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbxIdlGvQt7GiYRZdT2rFMAtknJ_5mYPpO5FcuM7tZExYqbBouHVS9SSJHK4DFwAcIFbEw/exec', {
     method: 'POST',
     mode: 'no-cors',
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'text/plain'},
     body: JSON.stringify(formData)
   }).catch(err => console.log('Submission error:', err));
   document.getElementById('success-title').textContent = t.successTitle;
