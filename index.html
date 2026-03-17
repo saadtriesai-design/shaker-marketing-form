@@ -821,6 +821,16 @@ function submitForm() {
 
   const refNum = generateRef();
   document.getElementById('ref-number').textContent = refNum;
+
+  const formData = collectFormData();
+  formData.ref = refNum;
+
+  fetch('https://hook.eu1.make.com/hf4od4qdsbb1qbg7ln4khvmoiq15ks46', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(formData)
+  }).catch(err => console.log('Submission error:', err));
   document.getElementById('success-title').textContent = t.successTitle;
   document.getElementById('success-msg').textContent = t.successMsg;
   document.getElementById('new-req-btn').textContent = t.newReq;
@@ -847,12 +857,4 @@ function resetForm() {
   document.getElementById('new-cust-check').className = 'check-box';
   document.getElementById('new-cust-check').innerHTML = '';
   document.getElementById('overdue-amount-field').style.display = 'none';
-  document.querySelectorAll('#overdue-group .chip').forEach(c => c.classList.remove('selected'));
-  isNewCustomer = false; urgency = ''; selectedDealer = '';
-  ['low','med','high'].forEach(l => document.getElementById('urg-'+l).className = 'urg-card');
-  document.querySelectorAll('.eng-only').forEach(w => w.classList.remove('has-error'));
-  window.scrollTo(0, 0);
-}
-</script>
-</body>
-</html>
+  document.querySelectorAll('#overdue-group .chip').forEach(c => c.class
